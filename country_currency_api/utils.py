@@ -28,6 +28,7 @@ class ExternalAPIError(Exception):
 async def refresh_countries_and_rates():
     """
     Fetch countries and exchange rates, then store them in the database.
+    Compatible with RESTCountries v2 API.
     """
     logger.info("Fetching countries and exchange rates...")
     db = SessionLocal()
@@ -55,17 +56,17 @@ async def refresh_countries_and_rates():
         missing_rates = 0
 
         for c in countries_data:
-            name = c.get("name", {}).get("common")
-            code = c.get("cca2")
-            capital_list = c.get("capital")
-            capital = capital_list[0] if capital_list else None
+            name = c.get("name")  # ✅ v2 uses string, not dict
+            capital = c.get("capital")
             region = c.get("region")
             population = c.get("population") or 0
-            currencies = c.get("currencies", {})
-            currency_code = list(currencies.keys())[0] if currencies else None
-            flag_url = c.get("flags", {}).get("png")
+            flag_url = c.get("flag")  # ✅ single flag URL in v2
 
-            if not name or not code:
+            # Handle currencies (list of dicts)
+            currencies = c.get("currencies") or []
+            currency_code = currencies[0].get("code") if currencies and isinstance(currencies[0], dict) else None
+
+            if not name:
                 continue  # skip malformed entries
 
             exchange_rate = None

@@ -13,6 +13,7 @@ from country_currency_api.db import SessionLocal, engine
 from country_currency_api.models import Base
 import country_currency_api.crud as crud
 
+
 # Initialize database tables
 Base.metadata.create_all(bind=engine)
 
@@ -39,7 +40,7 @@ async def refresh_countries():
         await refresh_countries_and_rates()
 
         # Update last refreshed timestamp
-        from crud import update_last_refreshed
+        from country_currency_api.crud import update_last_refreshed
         now_iso = datetime.utcnow().isoformat()
         update_last_refreshed(db, now_iso)
 
