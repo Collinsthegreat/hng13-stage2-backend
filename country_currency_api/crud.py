@@ -8,18 +8,18 @@ import country_currency_api.models  # make sure this matches your actual filenam
 
 def get_countries(db: Session, region: str = None, currency: str = None, sort: str = None):
     """Retrieve countries filtered by region, currency, and sorted by GDP if specified."""
-    q = db.query(models.Country)
+    q = db.query(country_currency_api.models.Country)
 
     if region:
-        q = q.filter(func.lower(models.Country.region) == region.lower())
+        q = q.filter(func.lower(country_currency_api.models.Country.region) == region.lower())
     if currency:
-        q = q.filter(func.lower(models.Country.currency_code) == currency.lower())
+        q = q.filter(func.lower(country_currency_api.models.Country.currency_code) == currency.lower())
 
     if sort:
         if sort == "gdp_desc":
-            q = q.order_by(models.Country.estimated_gdp.desc())
+            q = q.order_by(country_currency_api.models.Country.estimated_gdp.desc())
         elif sort == "gdp_asc":
-            q = q.order_by(models.Country.estimated_gdp.asc())
+            q = q.order_by(country_currency_api.models.Country.estimated_gdp.asc())
 
     countries = q.all()
 
@@ -41,7 +41,7 @@ def get_countries(db: Session, region: str = None, currency: str = None, sort: s
 
 def get_country_by_name(db: Session, name: str):
     """Fetch a single country by name (case-insensitive)."""
-    return db.query(models.Country).filter(func.lower(models.Country.name) == name.lower()).first()
+    return db.query(country_currency_api.models.Country).filter(func.lower(country_currency_api.models.Country.name) == name.lower()).first()
 
 
 def delete_country(db: Session, name: str) -> bool:
@@ -56,8 +56,8 @@ def delete_country(db: Session, name: str) -> bool:
 
 def get_status(db: Session):
     """Return total number of countries and last refresh time."""
-    total = db.query(func.count(models.Country.id)).scalar()
-    meta = db.query(models.Metadata).filter(models.Metadata.key == "last_refreshed_at").first()
+    total = db.query(func.count(country_currency_api.models.Country.id)).scalar()
+    meta = db.query(country_currency_api.models.Metadata).filter(country_currency_api.models.Metadata.key == "last_refreshed_at").first()
     last = None
     if meta and meta.value:
         try:
@@ -77,8 +77,8 @@ def upsert_country(db: Session, data: dict):
     if missing:
         raise ValueError(f"Missing required fields: {', '.join(missing)}")
 
-    existing = db.query(models.Country).filter(
-        func.lower(models.Country.name) == data["name"].lower()
+    existing = db.query(country_currency_api.models.Country).filter(
+        func.lower(country_currency_api.models.Country.name) == data["name"].lower()
     ).first()
 
     if existing:
@@ -89,7 +89,7 @@ def upsert_country(db: Session, data: dict):
         db.add(existing)
     else:
         # Insert new record
-        new = models.Country(**data)
+        new = country_currency_api.models.Country(**data)
         db.add(new)
 
     db.commit()
@@ -97,10 +97,10 @@ def upsert_country(db: Session, data: dict):
 
 def update_last_refreshed(db: Session, timestamp_iso: str):
     """Update or insert the last_refreshed_at metadata entry."""
-    meta = db.query(models.Metadata).filter(models.Metadata.key == "last_refreshed_at").first()
+    meta = db.query(country_currency_api.models.Metadata).filter(country_currency_api.models.Metadata.key == "last_refreshed_at").first()
     if meta:
         meta.value = timestamp_iso
     else:
-        meta = models.Metadata(key="last_refreshed_at", value=timestamp_iso)
+        meta = country_currency_api.models.Metadata(key="last_refreshed_at", value=timestamp_iso)
         db.add(meta)
     db.commit()
