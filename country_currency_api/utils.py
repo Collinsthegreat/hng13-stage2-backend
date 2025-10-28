@@ -3,9 +3,9 @@ matplotlib.use('Agg')  # Prevent GUI backend errors on servers
 import matplotlib.pyplot as plt
 import httpx
 import os
-from db import SessionLocal
+from .db import SessionLocal
 from sqlalchemy.orm import Session
-from models import Country, Metadata
+from .models import Country, Metadata
 from datetime import datetime
 import logging
 import numpy as np
