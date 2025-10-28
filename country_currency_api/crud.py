@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-import country_currency_api.models  # make sure this matches your actual filename (models.py)
+import country_currency_api.models  # make sure this matches your actual filename (models.py) and modifications for deployment
 
 
 
