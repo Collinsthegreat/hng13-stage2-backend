@@ -1,15 +1,17 @@
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, FileResponse
-from .utils import refresh_countries_and_rates, generate_gdp_summary_chart, ExternalAPIError
+
+# ✅ Fixed relative imports
+from country_currency_api.utils import refresh_countries_and_rates, generate_gdp_summary_chart, ExternalAPIError
 from sqlalchemy.orm import Session
 from fastapi import Query
-from .models import Country
+from country_currency_api.models import Country
 import logging
 from datetime import datetime
 import os
-from .db import SessionLocal, engine
-from models import Base
-import crud
+from country_currency_api.db import SessionLocal, engine
+from country_currency_api.models import Base
+import country_currency_api.crud as crud
 
 # Initialize database tables
 Base.metadata.create_all(bind=engine)
