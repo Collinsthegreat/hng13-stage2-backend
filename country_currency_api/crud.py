@@ -2,7 +2,8 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-import models  # make sure this matches your actual filename (models.py)
+import country_currency_api.models  # make sure this matches your actual filename (models.py)
+
 
 
 def get_countries(db: Session, region: str = None, currency: str = None, sort: str = None):
