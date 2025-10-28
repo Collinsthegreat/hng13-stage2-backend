@@ -1,6 +1,6 @@
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, FileResponse
-from utils import refresh_countries_and_rates, generate_gdp_summary_chart, ExternalAPIError
+from .utils import refresh_countries_and_rates, generate_gdp_summary_chart, ExternalAPIError
 from sqlalchemy.orm import Session
 from fastapi import Query
 from models import Country
