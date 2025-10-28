@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, func
-from db import Base  # 👈 this is the fix!
+from country_currency_api.db import Base  # 👈 this is the fix!
 
 class Country(Base):
     __tablename__ = "countries"
